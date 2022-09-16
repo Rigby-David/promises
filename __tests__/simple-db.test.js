@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const SimpleDb = require('../lib/simple-db.js');
+const crypto = require('crypto');
 
 const { CI, HOME } = process.env;
 const BASE_DIR = CI ? HOME : __dirname;
@@ -17,6 +18,25 @@ describe('simple database', () => {
   //   const db = new SimpleDb(TEST_DIR);
   //   console.log(db);
   // });
+
+  it('get(id) should return an object it from the directory', async () => {
+    //make a new object
+    const newFile = {
+      name: 'Orpheus',
+    };
+    //use crypto to generate a new id
+    const id = crypto.randomBytes(4).toString('hex');
+    //fs.writeFile to make call the id and object
+    await fs.writeFile(`${TEST_DIR}/${id}.json`, JSON.stringify(newFile));
+    //variable for importing simple-db
+    const db = new SimpleDb(TEST_DIR);
+    //variable for calling get method on the id
+    const res = await db.get(id);
+    //expect res === new object
+    expect(res).toEqual(newFile);
+  });
+
+  it('getAll should gets all objects in the directory', async () => {});
 
   it('save a file', async () => {
     const file = {
