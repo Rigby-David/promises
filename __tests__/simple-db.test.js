@@ -13,12 +13,6 @@ describe('simple database', () => {
     await fs.mkdir(TEST_DIR, { recursive: true });
   });
 
-  // it('get(id) should return ', async () => {
-  //   await fs.writeFile();
-  //   const db = new SimpleDb(TEST_DIR);
-  //   console.log(db);
-  // });
-
   it('get(id) should return an object it from the directory', async () => {
     //make a new object
     const newFile = {
@@ -36,7 +30,31 @@ describe('simple database', () => {
     expect(res).toEqual(newFile);
   });
 
-  it('getAll should gets all objects in the directory', async () => {});
+  it('getAll should gets all objects in the directory', async () => {
+    //shape the data
+    const db = new SimpleDb(TEST_DIR);
+
+    const newActor = [
+      {
+        name: 'Nicholas Cage',
+      },
+      {
+        name: 'Hugo Weaving',
+      },
+    ];
+
+    //map thru the array and save your data
+    const actorPromise = newActor.map((actor) => {
+      return db.save(actor);
+    });
+
+    //return the promise and start promise chain
+    return Promise.all(actorPromise).then((savedActors) => {
+      return db.get(TEST_DIR).then((retrievedActors) => {
+        expect(savedActors).toEqual(retrievedActors);
+      });
+    });
+  });
 
   it('save a file', async () => {
     const file = {
