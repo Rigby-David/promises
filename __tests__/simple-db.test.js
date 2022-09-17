@@ -50,8 +50,8 @@ describe('simple database', () => {
 
     //return the promise and start promise chain
     return Promise.all(actorPromise).then((savedActors) => {
-      return db.get(TEST_DIR).then((retrievedActors) => {
-        expect(savedActors).toEqual(retrievedActors);
+      return db.getAll().then((retrievedActors) => {
+        expect(savedActors).toEqual(expect.arrayContaining(retrievedActors));
       });
     });
   });
